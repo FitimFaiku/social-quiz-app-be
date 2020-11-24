@@ -4,6 +4,8 @@ import { Player } from 'src/table/player/player.entity';
 import { PlayerService } from 'src/table/player/player.service';
 import { CryptoService } from '../crypto/crypto.service';
 import * as moment from 'moment-timezone';
+import { RegisterDTO } from 'src/auth/dto/register.dto';
+import { IPlayerDTO } from 'src/auth/dto/player.dto';
 
 @Injectable()
 export class AuthService {
@@ -27,7 +29,7 @@ export class AuthService {
         HttpStatus.UNAUTHORIZED,
       );
     }
-    const minutesToWait = moment(playerResult.LastLoginAttemptDate).diff(
+    const minutesToWait = moment(playerResult.last_login_attempt_date).diff(
       moment(),
     );
     // console.log(minutesToWait);
@@ -79,7 +81,7 @@ export class AuthService {
 
     // console.log('Portal Key: ', playerResult.portal_key);
     const encIV = this.cryptoService.createIV();
-    playerResult.TempTokenKey = await this.cryptoService.encrypt(
+    playerResult.temp_token_key = await this.cryptoService.encrypt(
       playerResult.portal_key,
       Buffer.from(token, 'base64'),
       Buffer.from(encIV, 'base64'),
@@ -96,6 +98,44 @@ export class AuthService {
     await this.createTempTokenKey(player, token);
     return {
       token,
+    };
+  }
+
+  async register(registerDTO: RegisterDTO){
+    const encIV = this.cryptoService.createIV();
+    console.log("registerDTO:", registerDTO);
+
+    const passwordKey = await this.cryptoService.getKeyFromPW(
+      registerDTO.password,
+      encIV,
+    );
+
+    const portalKey = await this.cryptoService.encrypt(
+      process.env.SECRETKEY,
+      Buffer.from(process.env.SECRETKEY, 'base64'),
+      Buffer.from(encIV, 'base64'),
+    );
+
+    var dateOfBirth = new Date(registerDTO.dateOfBirth);
+
+    const player = new Player();
+    player.player_name = registerDTO.username;
+    player.e_mail_adress = registerDTO.email;
+    player.date_of_birth = dateOfBirth;
+    player.password_salt = encIV;
+    player.password = passwordKey;
+    player.portal_key = portalKey;
+    
+    await this.playerService.savePlayer(player);
+    return this.toPlayerDTO(player);
+
+  }
+
+  toPlayerDTO(player:Player):IPlayerDTO{
+    return {
+      name:player.player_name, 
+      email:player.e_mail_adress, 
+      dateOfBirth: player.date_of_birth,
     };
   }
 

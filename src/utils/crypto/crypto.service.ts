@@ -2,10 +2,19 @@ import { Injectable } from '@nestjs/common';
 import { createCipheriv, createDecipheriv, pbkdf2, randomBytes } from 'crypto';
 import { promisify } from 'util';
 const pdkdf2Promise = promisify(pbkdf2);
+
 const bytes = 32;
 
 @Injectable()
 export class CryptoService {
+  private config = {
+    hashBytes  : 64,          // size of the generated hash (to be chosen accordint the the chosen algo)
+    saltBytes  : 16,          // sise of the salt : larger salt means hashed passwords are more resistant to rainbow table
+    iterations : 500000,      // tune so that hashing the password takes about 1 second
+    algo       :'sha512',
+    encoding   : 'base64'     // hex is readable but base64 is shorter
+  };
+
   /**
    * creates 32byte salt
    * @returns 32byte salt in Base64 format

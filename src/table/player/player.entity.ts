@@ -4,8 +4,9 @@ import { FriendRequest } from '../friend_request/friend_request.entity';
 import { HostQuiz } from '../host_quiz/host_quiz.entity';
 import { Post } from '../post/post.entity';
 import { Quiz } from '../quiz/quiz.entity';
+import { Exclude } from 'class-transformer';
 
-@Entity('Player', { orderBy: { player_id: 'ASC' } })
+@Entity('player', { orderBy: { player_id: 'ASC' } })
 export class Player {
   @PrimaryGeneratedColumn()
   player_id: number;
@@ -20,8 +21,10 @@ export class Player {
   date_of_birth: Date;
 
   @Column()
+  @Exclude()
   password: string;
 
+  @Exclude()
   @Column()
   password_salt: string;
 
@@ -35,16 +38,16 @@ export class Player {
   failed_password_attempts: number;
 
   @Column()
-  LastLoginAttemptDate: Date;
+  last_login_attempt_date: Date;
+
+  @Column()
+  temp_token_key: string;
 
   @Column()
   reset_token: string;
 
   @Column()
   reset_token_expiry_date: Date;
-
-  @Column()
-  TempTokenKey: string;
 
   @Column()
   created_at: Date;

@@ -1,9 +1,13 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { HealthCheckService, TerminusModule } from '@nestjs/terminus';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { LoginModule } from './login/login.module';
+import { AuthModule } from './auth/auth.module';
+import { HealthModule } from './health/health.module';
+
+import { PlayerControllerModule } from './player/player.module';
 import { Answer } from './table/answer/answer.entity';
 import { AnswerModule } from './table/answer/answer.module';
 import { Choice } from './table/choice/choice.entity';
@@ -29,20 +33,23 @@ import { QuizGameModule } from './table/quiz_game/quiz_game.module';
 
 @Module({
   imports: [
+    // health check
+    TerminusModule,
+    HealthModule,
     ConfigModule.forRoot(),
 
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: process.env.MS_TableHost,
+      host: process.env.PG_TableHost,
       port: 5432,
-      username: process.env.MS_TableUsername,
-      password: process.env.MS_TablePassword,
-      database: process.env.MS_TableName,
-      schema: 'dbo',
+      username: process.env.PG_TableUsername,
+      password: process.env.PG_TablePassword,
+      database: process.env.PG_TableName,
+      schema: process.env.PG_SCHEMA,
       entities: [Answer, Choice, FriendRequest, Friendship, HostQuiz, Participant, Player, Post, Question, Quiz, QuizGame ],
       logging: ['error']
     }),
-    LoginModule,
+    AuthModule,
     AnswerModule,
     ChoiceModule,
     FriendRequestModule,
@@ -53,7 +60,9 @@ import { QuizGameModule } from './table/quiz_game/quiz_game.module';
     PostModule,
     QuestionModule,
     QuizModule,
-    QuizGameModule
+    QuizGameModule,
+    PlayerControllerModule,
+    
   ],
   controllers: [AppController],
   providers: [AppService],

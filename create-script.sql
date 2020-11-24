@@ -12,6 +12,7 @@ CREATE TABLE IF NOT EXISTS socialquizapp.player (
 	portal_id integer,
 	portal_key VARCHAR(100),
 	failed_password_attempts integer,
+	last_login_attempt_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	temp_token_key VARCHAR (100), 
 	reset_token VARCHAR (100),
 	reset_token_expiry_date TIMESTAMP,

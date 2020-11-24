@@ -4,7 +4,7 @@ To have a working Database please start a new Docker container and run the sql(c
 
 ```docker create -v /var/lib/postgresql/data --name PostgresData alpine```
 
-```docker run -p 5432:5432 --name yourContainerName -e POSTGRES_PASSWORD=yourPassword -d --volumes-from PostgresData postgres```
+```docker run -p 5432:5432 --name postgresql -e POSTGRES_PASSWORD=postgres -d --volumes-from PostgresData postgres```
 
 ## Description
 
