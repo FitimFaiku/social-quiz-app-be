@@ -1,14 +1,15 @@
-import { PrimaryGeneratedColumn, Column, Entity, OneToMany } from 'typeorm';
+import { PrimaryGeneratedColumn, Column, Entity, OneToMany, ManyToOne } from 'typeorm';
 import { Choice } from '../choice/choice.entity';
+import { HostQuiz } from '../host_quiz/host_quiz.entity';
 import { Participant } from '../participant/participant.entity';
 
-@Entity('quiz_game', { orderBy: { quiz_game_id: 'ASC' } })
+@Entity('quiz_game', { orderBy: { id: 'ASC' } })
 export class QuizGame {
   @PrimaryGeneratedColumn()
-  quiz_game_id: number;
+  id: number;
 
-  @Column()
-  host_quiz_id: number;
+  @ManyToOne(() => HostQuiz, hostQuiz => hostQuiz.quizGames)
+  host_quizId: HostQuiz;
 
   @Column()
   start_time: Date;
@@ -19,7 +20,7 @@ export class QuizGame {
   @OneToMany(() => Participant, participant => participant.quizGame)
   participants: Participant[];
 
-  @OneToMany(() => Choice, choices => choices.quizGame)
+  @OneToMany(() => Choice, choices => choices.quiz_game)
   choices: Choice[];
 
 }

@@ -1,21 +1,19 @@
-import { PrimaryGeneratedColumn, Column, Entity, ManyToOne } from 'typeorm';
+import { PrimaryGeneratedColumn, Column, Entity, ManyToOne, JoinColumn } from 'typeorm';
 import { Question } from '../question/question.entity';
 
 @Entity('answer', { orderBy: { id: 'ASC' } })
 export class Answer {
   @PrimaryGeneratedColumn()
-  answer_id: number;
+  id: number;
 
-  @Column()
-  question_id: number;
+  @ManyToOne(() => Question, question => question.answers)
+  @JoinColumn([ { name: 'questionid', referencedColumnName: 'id' }])
+  question: Question;
 
   @Column()
   answer: string;
 
   @Column()
   is_correct: boolean;
-
-  @ManyToOne(() => Question, question => question.answers)
-  question: Question;
 
 }

@@ -1,13 +1,14 @@
-import { PrimaryGeneratedColumn, Column, Entity, ManyToOne } from 'typeorm';
+import { PrimaryGeneratedColumn, Column, Entity, ManyToOne, OneToMany } from 'typeorm';
+import { Choice } from '../choice/choice.entity';
 import { QuizGame } from '../quiz_game/quiz_game.entity';
 
-@Entity('participant', { orderBy: { participant_id: 'ASC' } })
+@Entity('participant', { orderBy: { id: 'ASC' } })
 export class Participant {
   @PrimaryGeneratedColumn()
-  participant_id: number;
+  id: number;
 
-  @Column()
-  quiz_game_id: number;
+  @ManyToOne(() => QuizGame, quizGame => quizGame.participants)
+  quizGame: QuizGame;
 
   @Column()
   participant_name: string;
@@ -15,7 +16,6 @@ export class Participant {
   @Column()
   score: number;
 
-  @ManyToOne(() => QuizGame, quizGame => quizGame.participants)
-  quizGame: QuizGame;
-
+  @OneToMany(() => Choice, choices => choices.participant)
+  choices: Choice[];
 }

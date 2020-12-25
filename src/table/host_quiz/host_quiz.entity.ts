@@ -1,17 +1,18 @@
-import { PrimaryGeneratedColumn, Column, Entity, ManyToOne } from 'typeorm';
+import { PrimaryGeneratedColumn, Column, Entity, ManyToOne, OneToMany } from 'typeorm';
 import { Player } from '../player/player.entity';
 import { Quiz } from '../quiz/quiz.entity';
+import { QuizGame } from '../quiz_game/quiz_game.entity';
 
-@Entity('host_quiz', { orderBy: { host_quiz_id: 'ASC' } })
+@Entity('host_quiz', { orderBy: { id: 'ASC' } })
 export class HostQuiz {
   @PrimaryGeneratedColumn()
-  host_quiz_id: number;
+  id: number;
 
-  @Column()
-  player_id: number;
+  @ManyToOne(() => Player, player => player.hostQuize)
+  player: Player;
 
-  @Column()
-  quiz_id: number;
+  @ManyToOne(() => Quiz, quiz => quiz.hostQuize)
+  quiz: Quiz;
 
   @Column()
   lasts_till: Date;
@@ -29,12 +30,9 @@ export class HostQuiz {
   created_at: Date;
 
   @Column()
-  updated_at: string;
+  updated_at: Date;
 
-  @ManyToOne(() => Player, player => player.hostQuize)
-  player: Player;
-
-  @ManyToOne(() => Quiz, quiz => quiz.hostQuize)
-  quiz: Quiz;
+  @OneToMany(() => QuizGame, quizgame => quizgame.host_quizId)
+  quizGames: QuizGame[];
 
 }

@@ -1,21 +1,23 @@
-import { PrimaryGeneratedColumn, Column, Entity, ManyToOne } from 'typeorm';
+import { PrimaryGeneratedColumn, Column, Entity, ManyToOne, JoinColumn } from 'typeorm';
 import { Player } from '../player/player.entity';
 
-@Entity('friendship', { orderBy: { friendship_id: 'ASC' } })
+@Entity('friendship', { orderBy: { id: 'ASC' } })
 export class Friendship {
   @PrimaryGeneratedColumn()
-  friendship_id: number;
+  id: number;
 
-  @Column()
-  player_id_1: number;
+  @ManyToOne((type) => Player)
+  @JoinColumn([ { name: "player_1id", referencedColumnName: "id" }])
+  player_1: Player;
 
-  @Column()
-  player_id_2: number;
+  @ManyToOne((type) => Player)
+  @JoinColumn([ { name: "player_2id", referencedColumnName: "id" }])
+  player_2: number;
 
   @Column()
   date_added: Date;
 
-  @ManyToOne(() => Player, player => player.friendships)
-  player: Player;
+  /* @ManyToOne(() => Player, player => player.friendships)
+  player: Player; */
 
 }

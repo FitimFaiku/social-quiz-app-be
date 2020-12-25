@@ -6,6 +6,7 @@ import { CryptoService } from '../crypto/crypto.service';
 import * as moment from 'moment-timezone';
 import { RegisterDTO } from 'src/auth/dto/register.dto';
 import { IPlayerDTO } from 'src/auth/dto/player.dto';
+import { LoginDto } from 'src/auth/dto/login.dto';
 
 @Injectable()
 export class AuthService {
@@ -23,6 +24,7 @@ export class AuthService {
 
   async verifyplayername(player_name: string): Promise<Player> {
     const playerResult = await this.playerService.findByPlayerName(player_name);
+    console.log("Verify Player Name", playerResult);
     if (!playerResult) {
       throw new HttpException(
         'Invalid playername or Password',
@@ -52,8 +54,13 @@ export class AuthService {
   async verifyPassword(playerResult: Player, password: string, update = false) {
     const incomingKey = await this.cryptoService.getKeyFromPW(
       password,
-      playerResult.password,
+      playerResult.password_salt,
     );
+
+    /* const incomingKey = await this.cryptoService.getKeyFromPW(
+      password,
+      playerResult.password,
+    ); */
     // console.log({ incomingKey, pw: playerResult.PW });
     if (incomingKey !== playerResult.password) {
       throw !update
@@ -82,26 +89,44 @@ export class AuthService {
     // console.log('Portal Key: ', playerResult.portal_key);
     const encIV = this.cryptoService.createIV();
     playerResult.temp_token_key = await this.cryptoService.encrypt(
-      playerResult.portal_key,
+      playerResult.id,
       Buffer.from(token, 'base64'),
       Buffer.from(encIV, 'base64'),
     );
     // console.log('TempTokenKey: ', playerResult.TempTokenKey);
-    playerResult.password_salt = encIV;
-    console.log(playerResult)
+    // playerResult.password_salt = encIV;
     await this.playerService.savePlayer(playerResult);
+
   }
 
   async login(player: Player) {
-    const payload = { playerId: player.player_id, portalID: player.portal_id };
-    const token = await this.jwtService.sign(payload);
+    const payload = { playerId: player.id, playerName: player.player_name, dateCreated: new Date() };
+    const token = await this.jwtService.sign(payload,{secret:process.env.JWT_KEY,expiresIn: '12h'});
     await this.createTempTokenKey(player, token);
     return {
       token,
+      user : {
+        id: player.id,
+        name: player.player_name,
+      }
     };
+    // return `Authentication=${token}; HttpOnly; Path=/; Max-Age=${this.configService.get('JWT_ACCESS_TOKEN_EXPIRATION_TIME')}`;
+  }
+
+  async loginAndCreateTempTokenKey(player:LoginDto) {
+    const playerResult = await this.validateplayer(player.username, player.password);
+    return this.login(playerResult);
   }
 
   async register(registerDTO: RegisterDTO){
+    const playerResult = await this.playerService.findByPlayerName(registerDTO.username);
+    if (playerResult) {
+      throw new HttpException(
+        'There exists such a player name',
+        HttpStatus.UNAUTHORIZED,
+      );
+    }
+
     const encIV = this.cryptoService.createIV();
     console.log("registerDTO:", registerDTO);
 

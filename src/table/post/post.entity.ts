@@ -5,13 +5,14 @@ import { Quiz } from '../quiz/quiz.entity';
 @Entity('post', { orderBy: { id: 'ASC' } })
 export class Post {
   @PrimaryGeneratedColumn()
-  post_id: number;
+  id: number;
 
-  @Column()
-  quiz_id: number;
+  @OneToOne(() => Quiz)
+  @JoinColumn()
+  quiz: Quiz;
 
-  @Column()
-  player_id: number;
+  @ManyToOne(() => Player, user => user.posts)
+  player: Player;
 
   @Column()
   question_amount: number;
@@ -27,12 +28,5 @@ export class Post {
 
   @Column()
   updated_at: string;
-
-  @ManyToOne(() => Player, user => user.posts)
-  player: Player;
-
-  @OneToOne(() => Quiz)
-  @JoinColumn()
-  quiz: Quiz;
 
 }

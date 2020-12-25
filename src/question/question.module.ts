@@ -1,18 +1,19 @@
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { PlayerModule } from 'src/table/player/player.module';
+import { QuestionModule } from 'src/table/question/question.module';
 import { QuizModule } from 'src/table/quiz/quiz.module';
 import { jwtConstants } from 'src/utils/auth/constants';
 import { JwtStrategy } from 'src/utils/auth/jwt.strategy';
 import { UtilsModule } from 'src/utils/utils.module';
-import { QuizController } from './quiz.controller';
+import { QuestionController } from './question.controller';
 
 
 @Module({
-  controllers: [QuizController],
+  controllers: [QuestionController],
   imports: [
     UtilsModule,
-    PlayerModule,
+    QuestionModule,
     JwtModule.register({
       secret:
       jwtConstants.secret,
@@ -20,8 +21,8 @@ import { QuizController } from './quiz.controller';
           expiresIn: '1d',
       },
     }),
-    QuizModule
+    
   ],
-  providers: [JwtStrategy, QuizController]
+  providers: [JwtStrategy, QuestionController]
 })
-export class QuizControllerModule {}
+export class QuestionControllerModule {}

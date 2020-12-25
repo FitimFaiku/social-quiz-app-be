@@ -6,10 +6,10 @@ import { Post } from '../post/post.entity';
 import { Quiz } from '../quiz/quiz.entity';
 import { Exclude } from 'class-transformer';
 
-@Entity('player', { orderBy: { player_id: 'ASC' } })
+@Entity('player', { orderBy: { id: 'ASC' } })
 export class Player {
   @PrimaryGeneratedColumn()
-  player_id: number;
+  id: number;
 
   @Column()
   player_name: string;
@@ -58,13 +58,13 @@ export class Player {
   @OneToMany(() => Post, posts => posts.player)
   posts: Post[];
 
-  @OneToMany(() => FriendRequest, friendRequests => friendRequests.player)
+  @OneToMany(() => FriendRequest, friendRequests => friendRequests.player_1)
   friendRequests: FriendRequest[];
 
-  @OneToMany(() => Friendship, friendship => friendship.player)
-  friendships: Friendship[];
+  /* @OneToMany(() => Friendship, friendship => friendship.player)
+  friendships: Friendship[]; */
 
-  @OneToMany(() => Quiz, quiz => quiz.player)
+  @OneToMany(() => Quiz, quiz => quiz.created_from_player)
   quize: Quiz[];
 
   @OneToMany(() => HostQuiz, hostQuize => hostQuize.player)

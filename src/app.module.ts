@@ -8,6 +8,8 @@ import { AuthModule } from './auth/auth.module';
 import { HealthModule } from './health/health.module';
 
 import { PlayerControllerModule } from './player/player.module';
+import { QuestionControllerModule } from './question/question.module';
+import { QuizControllerModule } from './quiz/quiz.module';
 import { Answer } from './table/answer/answer.entity';
 import { AnswerModule } from './table/answer/answer.module';
 import { Choice } from './table/choice/choice.entity';
@@ -62,7 +64,9 @@ import { QuizGameModule } from './table/quiz_game/quiz_game.module';
     QuizModule,
     QuizGameModule,
     PlayerControllerModule,
-    
+    QuizControllerModule,
+    QuestionControllerModule,
+  
   ],
   controllers: [AppController],
   providers: [AppService],

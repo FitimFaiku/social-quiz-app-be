@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { getManager, Repository } from 'typeorm';
 import { Question } from './question.entity';
 
 
@@ -11,9 +11,9 @@ export class QuestionService {
     private readonly questionRepository: Repository<Question>,
   ) {}
 
-  findById(player_id: number) {
-    return this.questionRepository.findOne({
-      where: { player_id },
-    });
+  findByQuizId(id: number){
+    // console.log("ID,", id);
+  
+    return this.questionRepository.find({where: {quiz:id}});
   }
 }

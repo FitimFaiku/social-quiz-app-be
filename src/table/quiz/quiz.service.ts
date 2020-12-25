@@ -16,4 +16,20 @@ export class QuizService {
       where: { player_id },
     });
   }
+
+  findByQuizID(id: number){
+    return this.quizRepository.find({
+      where: { id },
+    });
+  }
+
+  findAllPublicAndActive(){
+    return this.quizRepository.find({
+      where: { is_active:true, is_private:false},
+    });
+  }
+
+  create(quiz:Quiz) {
+    return this.quizRepository.save(quiz);
+  }
 }

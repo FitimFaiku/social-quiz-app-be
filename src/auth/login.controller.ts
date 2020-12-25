@@ -9,6 +9,6 @@ export class LoginController {
   //@UseGuards(LocalAuthGuard)
   @Post('signin')
   async login(@Request() req) {
-    return this.authService.login(req.user);
+    return this.authService.loginAndCreateTempTokenKey(req.body);
   }
 }

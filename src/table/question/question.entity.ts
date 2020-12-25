@@ -1,14 +1,15 @@
-import { PrimaryGeneratedColumn, Column, Entity, ManyToOne, OneToMany } from 'typeorm';
+import { PrimaryGeneratedColumn, Column, Entity, ManyToOne, OneToMany, JoinColumn } from 'typeorm';
 import { Answer } from '../answer/answer.entity';
 import { Quiz } from '../quiz/quiz.entity';
 
-@Entity('question', { orderBy: { question_id: 'ASC' } })
+@Entity('question', { orderBy: { id: 'ASC' } })
 export class Question {
   @PrimaryGeneratedColumn()
-  question_id: number;
+  id: number;
 
-  @Column()
-  quiz_id: number;
+  @ManyToOne(() => Quiz, quiz => quiz.questions)
+  @JoinColumn([ { name: 'quizid', referencedColumnName: 'id' }])
+  quiz: Quiz;
 
   @Column()
   question_category: string;
@@ -20,6 +21,9 @@ export class Question {
   question: string;
 
   @Column()
+  question_type: string;
+
+  @Column()
   duration_in_sec: number;
 
   @Column()
@@ -27,9 +31,6 @@ export class Question {
 
   @Column()
   updated_at: Date;
-
-  @ManyToOne(() => Quiz, quiz => quiz.questions)
-  quiz: Quiz;
 
   @OneToMany(() => Answer, answers => answers.question)
   answers: Answer[];

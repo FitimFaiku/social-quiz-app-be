@@ -3,7 +3,7 @@
 CREATE SCHEMA IF NOT EXISTS socialquizapp;
 
 CREATE TABLE IF NOT EXISTS socialquizapp.player (
-	player_id serial primary KEY,
+	id serial primary KEY,
     player_name VARCHAR (50),
 	e_mail_adress VARCHAR (50),
 	date_of_birth DATE,
@@ -21,20 +21,21 @@ CREATE TABLE IF NOT EXISTS socialquizapp.player (
 );
 
 CREATE TABLE IF NOT EXISTS socialquizapp.quiz (
-    quiz_id serial primary KEY,
-    creeated_from_plyer_id integer REFERENCES socialquizapp.player (player_id),
-    creeated_from_quiz_id integer REFERENCES socialquizapp.quiz (quiz_id),
+    id serial primary KEY,
+    created_from_playerid integer REFERENCES socialquizapp.player (id),
+    created_from_quizid integer REFERENCES socialquizapp.quiz (id),
     quiz_title VARCHAR (50) NOT NULL,
 	quiz_description VARCHAR (500) NOT NULL,
 	is_active BOOL DEFAULT 'f',
+	is_private BOOL DEFAULT 't',
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS socialquizapp.post (
-	post_id serial primary KEY,
-    quiz_id integer REFERENCES socialquizapp.quiz (quiz_id),
-	player_id integer REFERENCES socialquizapp.player (player_id),
+	id serial primary KEY,
+    quizid integer REFERENCES socialquizapp.quiz (id),
+	playerid integer REFERENCES socialquizapp.player (id),
 	question_amount integer,
 	post_description VARCHAR (50),
 	post_title VARCHAR (50),
@@ -44,9 +45,9 @@ CREATE TABLE IF NOT EXISTS socialquizapp.post (
 );
 
 CREATE TABLE IF NOT EXISTS socialquizapp.friend_request (
-	friend_request_id serial primary KEY,
-    player_id_1 integer REFERENCES socialquizapp.player (player_id),
-    player_id_2 integer REFERENCES socialquizapp.player (player_id),
+	id serial primary KEY,
+    player_2id integer REFERENCES socialquizapp.player (id),
+    player_1id integer REFERENCES socialquizapp.player (id),
     request_message VARCHAR (250),
 	status VARCHAR (50),
 	created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -54,36 +55,35 @@ CREATE TABLE IF NOT EXISTS socialquizapp.friend_request (
 );
 
 CREATE TABLE IF NOT EXISTS socialquizapp.friendship (
-	friendship_id serial primary KEY,
-    player_id_1 integer REFERENCES socialquizapp.player (player_id),
-    player_id_2 integer REFERENCES socialquizapp.player (player_id),
+	id serial primary KEY,
+    player_1id integer REFERENCES socialquizapp.player (id),
+    player_2id integer REFERENCES socialquizapp.player (id),
     date_added DATE NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
-
-
 CREATE TABLE IF NOT EXISTS socialquizapp.question (
-    question_id serial primary KEY,
-    quiz_id integer REFERENCES socialquizapp.quiz (quiz_id),
+    id serial primary KEY,
+    quizid integer REFERENCES socialquizapp.quiz (id),
 	question_category VARCHAR(50),
     question_number integer NOT NULL,
 	question VARCHAR(250),
+	question_type VARCHAR(10),
     duration_in_sec integer NOT NULL,
 	created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS socialquizapp.answer (
-    answer_id serial primary KEY,
-    question_id integer REFERENCES socialquizapp.question (question_id),
+    id serial primary KEY,
+    questionid integer REFERENCES socialquizapp.question (id),
     answer VARCHAR(250),
 	is_correct BOOL DEFAULT 'f'
 );
 
 CREATE TABLE IF NOT EXISTS socialquizapp.host_quiz (
-    host_quiz_id serial primary KEY,
-    player_id integer REFERENCES socialquizapp.player (player_id),
-    quiz_id integer REFERENCES socialquizapp.quiz (quiz_id),
+    id serial primary KEY,
+    playerid integer REFERENCES socialquizapp.player (id),
+    quizid integer REFERENCES socialquizapp.quiz (id),
 	lasts_till TIMESTAMP,
     quiz_title VARCHAR (50) NOT NULL,
 	quiz_description VARCHAR (500) NOT NULL,
@@ -93,23 +93,23 @@ CREATE TABLE IF NOT EXISTS socialquizapp.host_quiz (
 );
 
 CREATE TABLE IF NOT EXISTS socialquizapp.quiz_game (
-    quiz_game_id serial primary KEY,
-    host_quiz_id integer REFERENCES socialquizapp.host_quiz (host_quiz_id),
+    id serial primary KEY,
+    host_quizid integer REFERENCES socialquizapp.host_quiz (id),
     start_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     end_time TIMESTAMP 
 );
 
 CREATE TABLE IF NOT EXISTS socialquizapp.participant (
-    participant_id serial primary KEY,
-	quiz_game_id integer REFERENCES socialquizapp.quiz_game (quiz_game_id),
+    id serial primary KEY,
+	quiz_gameid integer REFERENCES socialquizapp.quiz_game (id),
 	participant_name VARCHAR (25) NOT NULL,
     score DECIMAL(5,2)
 );
 
 CREATE TABLE IF NOT EXISTS socialquizapp.choice (
-	choice_id serial primary KEY,
-	quiz_game_id integer REFERENCES socialquizapp.quiz_game (quiz_game_id),
-	participant_id integer REFERENCES socialquizapp.participant (participant_id),
+	id serial primary KEY,
+	quiz_gameid integer REFERENCES socialquizapp.quiz_game (id),
+	participantid integer REFERENCES socialquizapp.participant (id),
 	correct BOOL DEFAULT 'f',
 	created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
