@@ -11,8 +11,7 @@ import { PlayerModule } from 'src/table/player/player.module';
     PlayerModule,
     UtilsModule,
     JwtModule.register({
-      secret:
-        'v/eHtYcHvD/AkhmDrTtegruDp5DmoIJFYkqeidf6GpRfffz71O+hzIssyZatrc2Mpq5ZkFWMhHuAVxqwGMr5wg==',
+      secret: process.env.SECRETKEY,
       signOptions: {
         expiresIn: '1d',
       },

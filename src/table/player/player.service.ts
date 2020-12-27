@@ -1,5 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { UpdatePlayerDTO } from 'src/player/playerDTO';
 import { CreateUserBodyDTO } from 'src/player/requestDTO';
 import { Repository } from 'typeorm';
 import { Player } from './player.entity';
@@ -15,9 +16,15 @@ export class PlayerService {
     return this.playerRepository.find();
   }
 
-  findById(player_id: number) {
+  findById(id: number) {
     return this.playerRepository.findOne({
-      where: { player_id },
+      where: { id },
+    });
+  }
+
+  findByIdAndName(id:number, player_name:string) {
+    return this.playerRepository.findOne({
+      where: { id, player_name },
     });
   }
 
@@ -41,6 +48,16 @@ export class PlayerService {
     // }
     // await this.todoRepository.update(id, newValue);
     // return await this.todoRepository.findOne(id);
+  }
+
+  async updatePlayerByIdAndPlayerDTO(id, playerDTO:UpdatePlayerDTO) {
+    const player = await this.playerRepository.findOne({where: id});
+    if(!player){
+      throw new NotFoundException('my message from NotFoundException');
+    } else {
+      // TODO
+      
+    }
   }
 
 }

@@ -32,6 +32,7 @@ import { Quiz } from './table/quiz/quiz.entity';
 import { QuizModule } from './table/quiz/quiz.module';
 import { QuizGame } from './table/quiz_game/quiz_game.entity';
 import { QuizGameModule } from './table/quiz_game/quiz_game.module';
+import { UtilsModule } from './utils/utils.module';
 
 @Module({
   imports: [
@@ -39,7 +40,7 @@ import { QuizGameModule } from './table/quiz_game/quiz_game.module';
     TerminusModule,
     HealthModule,
     ConfigModule.forRoot(),
-
+    UtilsModule,
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: process.env.PG_TableHost,

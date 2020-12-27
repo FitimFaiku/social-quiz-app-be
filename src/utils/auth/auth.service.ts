@@ -22,6 +22,11 @@ export class AuthService {
     return playerRes;
   }
 
+  async validateByPayload(payload) {
+    console.log("$$$PAYLOAD$$$", payload, payload.userId);
+    return await this.playerService.findByIdAndName(payload.user.id, payload.user.name);
+  }
+
   async verifyplayername(player_name: string): Promise<Player> {
     const playerResult = await this.playerService.findByPlayerName(player_name);
     console.log("Verify Player Name", playerResult);

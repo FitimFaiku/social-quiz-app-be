@@ -11,7 +11,11 @@ import { CryptoService } from './crypto/crypto.service';
 @Module({
   imports: [
     PlayerModule,
-    PassportModule,
+    PassportModule.register({
+      defaultStrategy: 'jwt',
+      property: 'user',
+      session: false,
+    }),
     JwtModule.register({
       secret: jwtConstants.secret,
       signOptions: { expiresIn: '1d' },
