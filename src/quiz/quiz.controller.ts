@@ -8,6 +8,7 @@ import { QuizService } from 'src/table/quiz/quiz.service';
 import { AuthService } from 'src/utils/auth/auth.service';
 import { LocalAuthGuard } from 'src/utils/auth/local-auth.guard';
 import { getRepository } from 'typeorm';
+import { QuizControllerModule } from './quiz.module';
 
 @Controller('v1/quiz')
 export class QuizController {
@@ -45,7 +46,8 @@ export class QuizController {
 
     try {
       // result = await this.quizService.create(req.body.createQuiz);
-      await getRepository(Quiz).save(req.body.createQuiz);
+      // First quiz, then Questions, then Answers --> cascade
+      const quiz = await getRepository(Quiz).save(req.body.createQuiz);
     } catch (err) {
         console.log(err);
     }

@@ -32,6 +32,6 @@ export class Question {
   @Column()
   updated_at: Date;
 
-  @OneToMany(() => Answer, answers => answers.question)
+  @OneToMany(() => Answer, answers => answers.question, {cascade: true})
   answers: Answer[];
 }
