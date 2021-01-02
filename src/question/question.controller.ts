@@ -7,6 +7,7 @@ import { QuestionService } from 'src/table/question/question.service';
 import { Quiz } from 'src/table/quiz/quiz.entity';
 import { QuizService } from 'src/table/quiz/quiz.service';
 import { AuthService } from 'src/utils/auth/auth.service';
+import { JwtStrategy } from 'src/utils/auth/jwt.strategy';
 import { LocalAuthGuard } from 'src/utils/auth/local-auth.guard';
 import { Connection, getRepository } from 'typeorm';
 
@@ -14,7 +15,7 @@ import { Connection, getRepository } from 'typeorm';
 export class QuestionController {
   constructor(private questionService:QuestionService) {}
 
-  //@UseGuards(LocalAuthGuard)
+  @UseGuards(JwtStrategy)
   @Get('quiz/:id')
   async getQuestions(@Param('id') id: number) {
     return getRepository(Question).createQueryBuilder("question").where("question.quizid = :id").setParameter("id", id).leftJoinAndSelect("question.answers", "answer").getMany();

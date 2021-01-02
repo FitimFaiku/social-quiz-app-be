@@ -12,8 +12,8 @@ import { CreateUserBodyDTO } from './requestDTO';
 export class PlayerController {
   constructor(private playerService: PlayerService, private authService:AuthService) {}
 
-  // @UseGuards(LocalAuthGuard)
-  @UseInterceptors(ClassSerializerInterceptor)
+  @UseGuards(JwtStrategy)
+  //@UseInterceptors(ClassSerializerInterceptor)
   @Get()
   async findAll():Promise<Player[]> {
     const result=  await this.playerService.findAll();

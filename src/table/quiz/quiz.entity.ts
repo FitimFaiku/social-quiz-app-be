@@ -34,7 +34,7 @@ export class Quiz {
   @Column()
   updated_at: Date;
 
-  @OneToMany(() => HostQuiz, hostQuize => hostQuize.quiz)
+  @OneToMany(() => HostQuiz, hostQuize => hostQuize.quiz, {cascade : true})
   hostQuize: HostQuiz[];
 
   @OneToMany(() => Question, questions => questions.quiz, {cascade : true})

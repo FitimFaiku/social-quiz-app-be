@@ -32,4 +32,8 @@ export class QuizService {
   create(quiz:Quiz) {
     return this.quizRepository.save(quiz);
   }
+
+  deleteById(id:number){
+    return this.quizRepository.delete(id);
+  }
 }

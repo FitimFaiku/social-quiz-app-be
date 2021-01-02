@@ -6,7 +6,7 @@ import { LocalAuthGuard } from 'src/utils/auth/local-auth.guard';
 export class LoginController {
   constructor(private authService: AuthService) {}
 
-  //@UseGuards(LocalAuthGuard)
+  @UseGuards(LocalAuthGuard)
   @Post('signin')
   async login(@Request() req) {
     return this.authService.loginAndCreateTempTokenKey(req.body);

@@ -1,3 +1,4 @@
+import { REPL_MODE_STRICT } from 'repl';
 import { PrimaryGeneratedColumn, Column, Entity, ManyToOne, OneToMany, JoinColumn } from 'typeorm';
 import { Answer } from '../answer/answer.entity';
 import { Quiz } from '../quiz/quiz.entity';
@@ -7,8 +8,8 @@ export class Question {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => Quiz, quiz => quiz.questions)
-  @JoinColumn([ { name: 'quizid', referencedColumnName: 'id' }])
+  @ManyToOne(() => Quiz, quiz => quiz.questions, {onDelete: 'RESTRICT'})
+  @JoinColumn([ { name: 'quizid', referencedColumnName: 'id'}])
   quiz: Quiz;
 
   @Column()
@@ -32,6 +33,6 @@ export class Question {
   @Column()
   updated_at: Date;
 
-  @OneToMany(() => Answer, answers => answers.question, {cascade: true})
+  @OneToMany(() => Answer, answers => answers.question, { cascade: true })
   answers: Answer[];
 }
