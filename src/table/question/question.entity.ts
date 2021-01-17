@@ -8,7 +8,7 @@ export class Question {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => Quiz, quiz => quiz.questions, {onDelete: 'RESTRICT'})
+  @ManyToOne(() => Quiz, quiz => quiz.questions, {onDelete: "CASCADE"})
   @JoinColumn([ { name: 'quizid', referencedColumnName: 'id'}])
   quiz: Quiz;
 

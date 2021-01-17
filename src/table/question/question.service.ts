@@ -16,4 +16,8 @@ export class QuestionService {
   
     return this.questionRepository.find({where: {quiz:id}});
   }
+
+  deleteById(id:number){
+    return this.questionRepository.delete(id);
+  }
 }

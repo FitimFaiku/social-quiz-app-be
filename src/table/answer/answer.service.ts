@@ -8,12 +8,17 @@ import { Answer } from './answer.entity';
 export class AnswerService {
   constructor(
     @InjectRepository(Answer)
-    private readonly playerRepository: Repository<Answer>,
+    private readonly answerRepository: Repository<Answer>,
   ) {}
 
   findById(player_id: number) {
-    return this.playerRepository.findOne({
+    return this.answerRepository.findOne({
       where: { player_id },
     });
   }
+
+  deleteById(id:number){
+    return this.answerRepository.delete(id);
+  }
+  
 }

@@ -41,7 +41,7 @@ export class CryptoService {
    * @param salt
    * @returns derived Key in Base64 format
    */
-  getKeyFromPW(password: string, salt: string): Promise<string> {
+  encryptPW(password: string, salt: string): Promise<string> {
     return pdkdf2Promise(
       password,
       salt,
@@ -51,13 +51,11 @@ export class CryptoService {
     ).then(derivedKey => derivedKey.toString('base64'));
   }
 
-  encrypt(message, key, iv) {
+  /* encryptWithMessage(message, key, iv) {
     try {
       const cipher = createCipheriv('aes-256-cbc', key, iv);
       let encrypted = Buffer.from(
-        cipher.update(message, 'utf8', 'binary'),
-        'binary',
-      );
+        cipher.update(message, 'utf8', 'binary'));
       const encFinal = Buffer.from(cipher.final('binary'), 'binary');
       encrypted = Buffer.concat([encrypted, encFinal]);
       return encrypted.toString('base64');
@@ -65,7 +63,7 @@ export class CryptoService {
       // console.log(err);
       return message;
     }
-  }
+  } */
 
   decrypt(message, key, iv) {
     try {
@@ -98,13 +96,13 @@ export class CryptoService {
     return item;
   }
 
-  encryptFields(item, fields, tempTokenKey, key, iv) {
+  /* encryptFields(item, fields, tempTokenKey, key, iv) {
     // var doc = documentToDecrypt;
     // const key = decryptKeyWithToken(tempTokenKey, token);
     fields.forEach(field => {
       try {
         if (item[field]) {
-          item[field] = this.encrypt(item[field], key, iv);
+          item[field] = this.encryptWithMessage(item[field], key, iv);
         }
       } catch (err) {
         console.log(err);
@@ -112,5 +110,5 @@ export class CryptoService {
     });
 
     return item;
-  }
+  } */
 }

@@ -20,12 +20,10 @@ export class Player {
   @Column()
   date_of_birth: Date;
 
-  @Column()
-  @Exclude()
+  @Column({ select: false })
   password: string;
 
-  @Exclude()
-  @Column()
+  @Column({ select: false })
   password_salt: string;
 
   @Column()
@@ -34,7 +32,7 @@ export class Player {
   @Column()
   portal_key: string;
 
-  @Column()
+  @Column({ select: false })
   failed_password_attempts: number;
 
   @Column()

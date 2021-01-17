@@ -5,6 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
+import { FactControllerModule } from './facts/facts.module';
 import { HealthModule } from './health/health.module';
 
 import { PlayerControllerModule } from './player/player.module';
@@ -14,6 +15,8 @@ import { Answer } from './table/answer/answer.entity';
 import { AnswerModule } from './table/answer/answer.module';
 import { Choice } from './table/choice/choice.entity';
 import { ChoiceModule } from './table/choice/choice.module';
+import { Fact } from './table/fact/fact.entity';
+import { FactModule } from './table/fact/fact.module';
 import { Friendship } from './table/friendship/friendship.entity';
 import { FriendshipModule } from './table/friendship/friendship.module';
 import { FriendRequest } from './table/friend_request/friend_request.entity';
@@ -49,12 +52,13 @@ import { UtilsModule } from './utils/utils.module';
       password: process.env.PG_TablePassword,
       database: process.env.PG_TableName,
       schema: process.env.PG_SCHEMA,
-      entities: [Answer, Choice, FriendRequest, Friendship, HostQuiz, Participant, Player, Post, Question, Quiz, QuizGame ],
+      entities: [Answer, Choice, FriendRequest, Friendship, HostQuiz, Participant, Player, Post, Question, Quiz, QuizGame, Fact ],
       logging: ['error']
     }),
     AuthModule,
     AnswerModule,
     ChoiceModule,
+    FactModule,
     FriendRequestModule,
     FriendshipModule,
     HostQuizModule,
@@ -67,6 +71,7 @@ import { UtilsModule } from './utils/utils.module';
     PlayerControllerModule,
     QuizControllerModule,
     QuestionControllerModule,
+    FactControllerModule,
   
   ],
   controllers: [AppController],

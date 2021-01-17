@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { getRepository, Repository } from 'typeorm';
 import { Quiz } from './quiz.entity';
 
 
@@ -11,9 +11,15 @@ export class QuizService {
     private readonly quizRepository: Repository<Quiz>,
   ) {}
 
-  findById(player_id: number) {
+  findByPlayerId(player_id: number) {
     return this.quizRepository.findOne({
       where: { player_id },
+    });
+  }
+
+  findById(id: number) {
+    return this.quizRepository.findOne({
+      where: { id },
     });
   }
 
@@ -24,9 +30,10 @@ export class QuizService {
   }
 
   findAllPublicAndActive(){
-    return this.quizRepository.find({
+    // return getRepository(Quiz).createQueryBuilder("quiz").leftJoinAndSelect("quiz.created_from_playerid", "created_from_playerid").getMany();
+    /* return this.quizRepository.find({
       where: { is_active:true, is_private:false},
-    });
+    }); */
   }
 
   create(quiz:Quiz) {

@@ -6,7 +6,7 @@ export class Answer {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => Question, question => question.answers)
+  @ManyToOne(() => Question, question => question.answers, {onDelete:'CASCADE'})
   @JoinColumn([ { name: 'questionid', referencedColumnName: 'id' }])
   question: Question;
 

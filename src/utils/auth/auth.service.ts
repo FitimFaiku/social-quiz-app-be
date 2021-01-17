@@ -7,6 +7,7 @@ import * as moment from 'moment-timezone';
 import { RegisterDTO } from 'src/auth/dto/register.dto';
 import { IPlayerDTO } from 'src/auth/dto/player.dto';
 import { LoginDto } from 'src/auth/dto/login.dto';
+import { getRepository } from 'typeorm';
 
 @Injectable()
 export class AuthService {
@@ -57,9 +58,14 @@ export class AuthService {
   }
 
   async verifyPassword(playerResult: Player, password: string, update = false) {
-    const incomingKey = await this.cryptoService.getKeyFromPW(
+    const user = await getRepository(Player)
+    .createQueryBuilder("player")
+    .addSelect(['player.password_salt', 'player.password'])
+    .getOne();
+    
+    const incomingKey = await this.cryptoService.encryptPW(
       password,
-      playerResult.password_salt,
+      user.password_salt,
     );
 
     /* const incomingKey = await this.cryptoService.getKeyFromPW(
@@ -67,7 +73,7 @@ export class AuthService {
       playerResult.password,
     ); */
     // console.log({ incomingKey, pw: playerResult.PW });
-    if (incomingKey !== playerResult.password) {
+    if (incomingKey !== user.password) {
       throw !update
         ? new HttpException(
             'Invalid playername or Password',
@@ -75,29 +81,19 @@ export class AuthService {
           )
         : new HttpException('Invalid Password', HttpStatus.CONFLICT);
     }
+    playerResult.password_salt = user.password_salt;
   }
 
   async createTempTokenKey(playerResult: Player, token: string) {
     if (!playerResult.portal_key) {
       return;
     }
-
-    const testMessage = 'test';
-
-    const result = await this.cryptoService.encrypt(
-      testMessage,
-      playerResult.portal_key,
-      this.cryptoService.createIV(),
-    );
     // console.log('Testmessage enc: ', result);
 
     // console.log('Portal Key: ', playerResult.portal_key);
     const encIV = this.cryptoService.createIV();
-    playerResult.temp_token_key = await this.cryptoService.encrypt(
-      playerResult.id,
-      Buffer.from(token, 'base64'),
-      Buffer.from(encIV, 'base64'),
-    );
+
+    playerResult.temp_token_key = await this.cryptoService.encryptPW(token,encIV);
     // console.log('TempTokenKey: ', playerResult.TempTokenKey);
     // playerResult.password_salt = encIV;
     await this.playerService.savePlayer(playerResult);
@@ -133,18 +129,13 @@ export class AuthService {
     }
 
     const encIV = this.cryptoService.createIV();
-    console.log("registerDTO:", registerDTO);
 
-    const passwordKey = await this.cryptoService.getKeyFromPW(
+    const passwordKey = await this.cryptoService.encryptPW(
       registerDTO.password,
       encIV,
     );
 
-    const portalKey = await this.cryptoService.encrypt(
-      process.env.SECRETKEY,
-      Buffer.from(process.env.SECRETKEY, 'base64'),
-      Buffer.from(encIV, 'base64'),
-    );
+    const portalKey = await this.cryptoService.encryptPW(process.env.SECRETKEY,encIV);
 
     var dateOfBirth = new Date(registerDTO.dateOfBirth);
 

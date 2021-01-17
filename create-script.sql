@@ -20,6 +20,13 @@ CREATE TABLE IF NOT EXISTS socialquizapp.player (
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE IF NOT EXISTS socialquizapp.fact (
+	id serial primary KEY,
+	fact VARCHAR (1000),
+	created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
 CREATE TABLE IF NOT EXISTS socialquizapp.quiz (
     id serial primary KEY,
     created_from_playerid integer REFERENCES socialquizapp.player (id),

@@ -1,5 +1,7 @@
 /** Drop Tables  */
 
+
+DROP Table IF EXISTS socialquizapp.fact;
 DROP Table IF EXISTS socialquizapp.choice;
 DROP Table IF EXISTS socialquizapp.participant;
 DROP Table IF EXISTS socialquizapp.quiz_game;

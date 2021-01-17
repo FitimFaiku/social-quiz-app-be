@@ -9,7 +9,7 @@ export class Quiz {
   id: number;
 
   @ManyToOne(() => Player, player => player.quize)
-  @JoinColumn([ { name: 'created_from_playerid', referencedColumnName: 'id' }])
+  @JoinColumn([ { name: 'created_from_playerid', referencedColumnName: 'id'  }])
   created_from_player: Player;
 
   @OneToOne(type => Quiz)
@@ -34,10 +34,10 @@ export class Quiz {
   @Column()
   updated_at: Date;
 
-  @OneToMany(() => HostQuiz, hostQuize => hostQuize.quiz, {cascade : true})
+  @OneToMany(() => HostQuiz, hostQuize => hostQuize.quiz, {cascade:true})
   hostQuize: HostQuiz[];
 
-  @OneToMany(() => Question, questions => questions.quiz, {cascade : true})
+  @OneToMany(() => Question, questions => questions.quiz, {cascade:true})
   questions: Question[];
 
 }
