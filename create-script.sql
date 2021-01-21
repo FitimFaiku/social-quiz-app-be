@@ -71,10 +71,10 @@ CREATE TABLE IF NOT EXISTS socialquizapp.friendship (
 CREATE TABLE IF NOT EXISTS socialquizapp.question (
     id serial primary KEY,
     quizid integer REFERENCES socialquizapp.quiz (id),
-	question_category VARCHAR(50),
+	question_category VARCHAR(100),
     question_number integer NOT NULL,
-	question VARCHAR(250),
-	question_type VARCHAR(10),
+	question VARCHAR(1000),
+	question_type VARCHAR(50),
     duration_in_sec integer NOT NULL,
 	created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
@@ -83,7 +83,7 @@ CREATE TABLE IF NOT EXISTS socialquizapp.question (
 CREATE TABLE IF NOT EXISTS socialquizapp.answer (
     id serial primary KEY,
     questionid integer REFERENCES socialquizapp.question (id),
-    answer VARCHAR(250),
+    answer VARCHAR(1000),
 	is_correct BOOL DEFAULT 'f'
 );
 

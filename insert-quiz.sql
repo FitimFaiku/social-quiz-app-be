@@ -5,23 +5,82 @@ INSERT INTO socialquizapp.quiz(quiz_title,quiz_description,is_active,is_private)
 ('Linux Quiz', 'Das ist ein Quiz, welches sich mit Linux Commandos auseinander setzt.',true, false);
 
 INSERT INTO socialquizapp.question(quizId,question_number, question, question_type, duration_in_sec) VALUES
-((SELECT id FROM socialquizapp.quiz WHERE quiz_title LIKE 'Linux Quiz'), 1, 'Mit welchem Kommando wird ein neuer Ordner in Linux erstellt?', 'sc', 30),
-((SELECT id FROM socialquizapp.quiz WHERE quiz_title LIKE 'Linux Quiz'), 2, 'Mit welchem Kommando werden die Dateien im aktuellen Pfad aufgelistet?', 'sc', 30),
-((SELECT id FROM socialquizapp.quiz WHERE quiz_title LIKE 'Linux Quiz'), 3, 'Mit welchem Kommando wird in einem anderen Ordner gewechselt?', 'sc', 30);
+((SELECT id FROM socialquizapp.quiz WHERE quiz_title LIKE 'Linux Quiz'), 1, 'Was wird durch folgendem Code auf der console ausgeben?
+``` js
+var myObject = {
+    foo: "bar",
+    func: function() {
+        var self = this;
+        console.log("outer func:  this.foo = " + this.foo);
+        console.log("outer func:  self.foo = " + self.foo);
+        (function() {
+            console.log("inner func:  this.foo = " + this.foo);
+            console.log("inner func:  self.foo = " + self.foo);
+        }());
+    }
+};
+myObject.func();
+```', 'sc', 30),
+((SELECT id FROM socialquizapp.quiz WHERE quiz_title LIKE 'Linux Quiz'), 2, 'Mit welchem Kommando wird ein neuer Ordner in Linux erstellt?', 'sc', 30),
+((SELECT id FROM socialquizapp.quiz WHERE quiz_title LIKE 'Linux Quiz'), 3, 'Mit welchem Kommando werden die Dateien im aktuellen Pfad aufgelistet?', 'sc', 30),
+((SELECT id FROM socialquizapp.quiz WHERE quiz_title LIKE 'Linux Quiz'), 4, 'Mit welchem Kommando wird in einem anderen Ordner gewechselt?', 'mc', 30);
+
 
 INSERT INTO socialquizapp.answer(questionId, answer, is_correct) VALUES
-((SELECT id FROM socialquizapp.question WHERE question LIKE 'Mit welchem Kommando wird ein neuer Ordner in Linux erstellt?'), 'pwd',false),
-((SELECT id FROM socialquizapp.question WHERE question LIKE 'Mit welchem Kommando wird ein neuer Ordner in Linux erstellt?'), 'ls',false),
-((SELECT id FROM socialquizapp.question WHERE question LIKE 'Mit welchem Kommando wird ein neuer Ordner in Linux erstellt?'), 'touch',false),
-((SELECT id FROM socialquizapp.question WHERE question LIKE 'Mit welchem Kommando wird ein neuer Ordner in Linux erstellt?'), 'mkdir',true),
-((SELECT id FROM socialquizapp.question WHERE question LIKE 'Mit welchem Kommando werden die Dateien im aktuellen Pfad aufgelistet?'), 'pwd',false),
-((SELECT id FROM socialquizapp.question WHERE question LIKE 'Mit welchem Kommando werden die Dateien im aktuellen Pfad aufgelistet?'), 'ls',true),
-((SELECT id FROM socialquizapp.question WHERE question LIKE 'Mit welchem Kommando werden die Dateien im aktuellen Pfad aufgelistet?'), 'cd',false),
-((SELECT id FROM socialquizapp.question WHERE question LIKE 'Mit welchem Kommando werden die Dateien im aktuellen Pfad aufgelistet?'), 'echo',false),
-((SELECT id FROM socialquizapp.question WHERE question LIKE 'Mit welchem Kommando wird in einem anderen Ordner gewechselt?'), 'cd',true),
-((SELECT id FROM socialquizapp.question WHERE question LIKE 'Mit welchem Kommando wird in einem anderen Ordner gewechselt?'), 'ls',false),
-((SELECT id FROM socialquizapp.question WHERE question LIKE 'Mit welchem Kommando wird in einem anderen Ordner gewechselt?'), 'pwd',false),
-((SELECT id FROM socialquizapp.question WHERE question LIKE 'Mit welchem Kommando wird in einem anderen Ordner gewechselt?'), 'mkdir',false);
+((SELECT id FROM socialquizapp.question WHERE question LIKE '%var myObject%'), '``` js
+Uncaught TypeError: Cannot read property "func" of undefined
+```',false),
+((SELECT id FROM socialquizapp.question WHERE question LIKE '%var myObject%'), '``` js
+outer func:  this.foo = bar
+outer func:  self.foo = bar
+inner func:  this.foo = undefined
+inner func:  self.foo = bar
+```',true),
+((SELECT id FROM socialquizapp.question WHERE question LIKE '%var myObject%'), '``` js
+Uncaught TypeError: Cannot read property "foo" of undefined
+```',false),
+((SELECT id FROM socialquizapp.question WHERE question LIKE '%var myObject%'), '``` js
+outer func:  this.foo = foo
+outer func:  self.foo = bar
+inner func:  this.foo = bar
+inner func:  self.foo = bar
+```',false),
+((SELECT id FROM socialquizapp.question WHERE question LIKE 'Mit welchem Kommando wird ein neuer Ordner in Linux erstellt?'), '```bash
+foo@bar:~$ pwd
+```',false),
+((SELECT id FROM socialquizapp.question WHERE question LIKE 'Mit welchem Kommando wird ein neuer Ordner in Linux erstellt?'), '```bash
+foo@bar:~$ ls
+```',false),
+((SELECT id FROM socialquizapp.question WHERE question LIKE 'Mit welchem Kommando wird ein neuer Ordner in Linux erstellt?'), '```bash
+foo@bar:~$ touch
+```',false),
+((SELECT id FROM socialquizapp.question WHERE question LIKE 'Mit welchem Kommando wird ein neuer Ordner in Linux erstellt?'), '```bash
+foo@bar:~$ mkdir
+```',true),
+((SELECT id FROM socialquizapp.question WHERE question LIKE 'Mit welchem Kommando werden die Dateien im aktuellen Pfad aufgelistet?'), '```bash
+foo@bar:~$ pwd
+```',false),
+((SELECT id FROM socialquizapp.question WHERE question LIKE 'Mit welchem Kommando werden die Dateien im aktuellen Pfad aufgelistet?'), '```bash
+foo@bar:~$ ls
+```',true),
+((SELECT id FROM socialquizapp.question WHERE question LIKE 'Mit welchem Kommando werden die Dateien im aktuellen Pfad aufgelistet?'), '```bash
+foo@bar:~$ cd
+```',false),
+((SELECT id FROM socialquizapp.question WHERE question LIKE 'Mit welchem Kommando werden die Dateien im aktuellen Pfad aufgelistet?'), '```bash
+foo@bar:~$ echo
+```',false),
+((SELECT id FROM socialquizapp.question WHERE question LIKE 'Mit welchem Kommando wird in einem anderen Ordner gewechselt?'), '```bash
+foo@bar:~$ cd
+```',true),
+((SELECT id FROM socialquizapp.question WHERE question LIKE 'Mit welchem Kommando wird in einem anderen Ordner gewechselt?'), '```bash
+foo@bar:~$ ls
+```',false),
+((SELECT id FROM socialquizapp.question WHERE question LIKE 'Mit welchem Kommando wird in einem anderen Ordner gewechselt?'), '```bash
+foo@bar:~$ ls -a
+```',false),
+((SELECT id FROM socialquizapp.question WHERE question LIKE 'Mit welchem Kommando wird in einem anderen Ordner gewechselt?'), '```bash
+foo@bar:~$ cd ..
+```',true);
 
 -- Quiz über Hauptstädte
 
